@@ -1,27 +1,54 @@
 import axios from "axios";
 
-export const loginUser = async (userCredentials) => {
-    try {
-        const response = await axios.post("http://localhost:5000/users/login", userCredentials)
-        console.log(response.data)
-        return response.data
-    }
-    catch(error){
-        console.log(error.response.data)
-        console.error(error)
-        throw error
-    }
-}
+export const loginUser = async (userData) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/users/login",
+      userData
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Axios Error:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
 
 export const registerUser = async (userCredentials) => {
-    try {
-        const response = await axios.post("http://localhost:5000/users/register", userCredentials)
-        console.log(response.data)
-        return response.data
-    }
-    catch(err){
-        console.log(err.response.data)
-        console.error(err)
-        throw err
-    }
-}
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/users/register",
+      userCredentials
+    );
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getRecipes = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/recipes");
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const addRecipe = async (recipe, token) => {
+  try {
+    const response = await axios.post("http://localhost:5000/recipes", recipe, {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (err) {
+    console.error(err);
+  }
+};

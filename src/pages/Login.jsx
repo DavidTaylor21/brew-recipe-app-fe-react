@@ -20,11 +20,9 @@ const Login = () => {
         secure: true,
         sameSite: "Strict",
       });
-      console.log("Login successful");
       navigate("/");
     } catch (err) {
       setError("Invalid email or password.");
-      console.log(err);
     }
   };
 

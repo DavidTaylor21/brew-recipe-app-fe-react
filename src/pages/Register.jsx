@@ -4,11 +4,12 @@ import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -16,9 +17,7 @@ const Register = () => {
     try {
       const createdAt = new Date().toISOString();
       const response = await registerUser({
-        username,
-        email,
-        password,
+        ...form,
         createdAt,
       });
       if (response) {
@@ -28,12 +27,11 @@ const Register = () => {
           sameSite: "Strict",
         });
       }
-      console.log("User registered successfully");
       navigate("/");
     } catch (err) {
-      err.response.data.msg
+      err.response
         ? setError(err.response.data.msg)
-        : setError("An error occurec, please try again");
+        : setError("An error occured, please try again");
     }
   };
   return (
@@ -45,38 +43,35 @@ const Register = () => {
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Username
-            </label>
             <input
               type="username"
+              name="username"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={form.username}
+              placeholder="username"
+              onChange={handleChange}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Email
-            </label>
             <input
               type="email"
+              name="email"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={form.email}
+              placeholder="email"
+              onChange={handleChange}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Password
-            </label>
             <input
               type="password"
+              name="password"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={form.password}
+              placeholder="password"
+              onChange={handleChange}
               required
             />
           </div>
