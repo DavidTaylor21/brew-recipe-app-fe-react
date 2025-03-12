@@ -1,16 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import { addRecipe } from "../api/api";
+import { addRecipe, getGrinders } from "../api/api";
 import { jwtDecode } from "jwt-decode";
+import Select from "react-select";
 
-const AddRecipeForm = ({ onAddRecipe}) => {
+const AddRecipeForm = ({ onAddRecipe }) => {
+  const [grinders, setGrinders] = useState([]);
+  const [error, setError] = useState(null);
   const [form, setForm] = useState({
     title: "",
     brewMethod: "",
     steps: "",
-    grinder: "",
+    grinder: null,
     coffee: "",
   });
+
+  useEffect(() => {
+    const getGrindersList = async () => {
+      try {
+        setError(null);
+        const grindersData = await getGrinders();
+        const grindersArr = grindersData.grinders.map((grinder) => ({
+          value: grinder.name,
+          label: grinder.name,
+        }));
+        setGrinders(grindersArr);
+      } catch (err) {
+        setError(err);
+      }
+    };
+    getGrindersList();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,18 +38,23 @@ const AddRecipeForm = ({ onAddRecipe}) => {
     const decodedToken = jwtDecode(token);
 
     addRecipe(form, token);
-    onAddRecipe({...form, username :decodedToken.username})
-    
+    onAddRecipe({ ...form, username: decodedToken.username });
+
     setForm({
-        title: "",
-        brewMethod: "",
-        steps: "",
-        grinder: "",
-        coffee: "",
-      })
+      title: "",
+      brewMethod: "",
+      steps: "",
+      grinder: null,
+      coffee: "",
+    });
   };
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectChange = (selectedOption) => {
+    setForm({ ...form, grinder: selectedOption });
   };
 
   return (
@@ -88,14 +113,12 @@ const AddRecipeForm = ({ onAddRecipe}) => {
         </div>
         <div>
           <label className="block text-lg text-gray-700">Grinder Name</label>
-          <input
-            type="text"
+          <Select
+            options={grinders}
             value={form.grinder}
-            onChange={handleChange}
-            name="grinder"
-            placeholder="Enter grinder name"
-            className="mt-2 p-3 w-full border border-gray-300 rounded-lg"
-            required
+            onChange={handleSelectChange}
+            placeholder="Select a grinder..."
+            className="mt-2"
           />
         </div>
         <button

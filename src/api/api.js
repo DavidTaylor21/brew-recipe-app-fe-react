@@ -3,7 +3,7 @@ import axios from "axios";
 export const loginUser = async (userData) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/users/login",
+      "http://localhost:3000/users/login",
       userData
     );
     return response.data;
@@ -19,7 +19,7 @@ export const loginUser = async (userData) => {
 export const registerUser = async (userCredentials) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/users/register",
+      "http://localhost:3000/users/register",
       userCredentials
     );
     return response.data;
@@ -31,7 +31,7 @@ export const registerUser = async (userCredentials) => {
 
 export const getRecipes = async () => {
   try {
-    const response = await axios.get("http://localhost:5000/recipes");
+    const response = await axios.get("http://localhost:3000/recipes");
     return response.data;
   } catch (err) {
     console.error(err);
@@ -41,7 +41,7 @@ export const getRecipes = async () => {
 
 export const addRecipe = async (recipe, token) => {
   try {
-    const response = await axios.post("http://localhost:5000/recipes", recipe, {
+    const response = await axios.post("http://localhost:3000/recipes", recipe, {
       headers: {
         Authorization: token ? `Bearer ${token}` : "",
         "Content-Type": "application/json",
@@ -50,5 +50,17 @@ export const addRecipe = async (recipe, token) => {
     return response.data;
   } catch (err) {
     console.error(err);
+    throw err
   }
 };
+
+export const getGrinders = async ()=>{
+  try {
+    const response = await axios.get("http://localhost:3000/grinders")
+    return response.data
+  }
+  catch(err){
+    console.error(err)
+    throw err
+  }
+}
