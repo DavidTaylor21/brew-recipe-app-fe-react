@@ -48,7 +48,7 @@ const Home = () => {
 
   return (
     <>
-      <NavBar />
+      <NavBar setIsLoggedIn={setIsLoggedIn}/>
       <div className="text-center mb-8 mt-8">
         {isLoggedIn ? (
           <>

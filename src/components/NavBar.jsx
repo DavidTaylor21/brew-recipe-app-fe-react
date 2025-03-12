@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import Logout from "./Logout";
 
-const Navbar = () => {
+const Navbar = ({setIsLoggedIn}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -35,10 +36,13 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6">
           {user ? (
+            <>
+            <Logout setUser={setUser} setIsLoggedIn={setIsLoggedIn}/>
             <h1 className="text-white px-2 py-1">
               {user.username.charAt(0).toUpperCase() +
                 user.username.slice(1)}
             </h1>
+            </>
           ) : (
             <Link
               to="/login"
@@ -75,9 +79,12 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-gray-700 rounded-md text-white py-2">
           {user ? (
+            <>
             <h1 className="text-white px-2 py-1">
               {user.username.charAt(0).toUpperCase() + user.username.slice(1)}
             </h1>
+            <Logout setUser={setUser} setIsLoggedIn={setIsLoggedIn}/>
+            </>
           ) : (
             <Link
               to="/login"
