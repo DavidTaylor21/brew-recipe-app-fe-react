@@ -3,7 +3,7 @@ import axios from "axios";
 export const loginUser = async (userData) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/users/login",
+      "https://brew-recipe-app-be.onrender.com/users/login",
       userData
     );
     return response.data;
@@ -19,7 +19,7 @@ export const loginUser = async (userData) => {
 export const registerUser = async (userCredentials) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/users/register",
+      "https://brew-recipe-app-be.onrender.com/users/register",
       userCredentials
     );
     return response.data;
@@ -29,19 +29,22 @@ export const registerUser = async (userCredentials) => {
   }
 };
 
-export const getRecipes = async () => {
+export const getRecipes = async (filters) => {
   try {
-    const response = await axios.get("http://localhost:3000/recipes");
-    return response.data;
-  } catch (err) {
-    console.error(err);
-    throw err;
+    const response = await axios.get("https://brew-recipe-app-be.onrender.com/recipes", {
+      params: filters, 
+    });
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    throw error;
   }
 };
 
+
 export const addRecipe = async (recipe, token) => {
   try {
-    const response = await axios.post("http://localhost:3000/recipes", recipe, {
+    const response = await axios.post("https://brew-recipe-app-be.onrender.com/recipes", recipe, {
       headers: {
         Authorization: token ? `Bearer ${token}` : "",
         "Content-Type": "application/json",
@@ -50,17 +53,16 @@ export const addRecipe = async (recipe, token) => {
     return response.data;
   } catch (err) {
     console.error(err);
-    throw err
+    throw err;
   }
 };
 
-export const getGrinders = async ()=>{
+export const getGrinders = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/grinders")
-    return response.data
+    const response = await axios.get("https://brew-recipe-app-be.onrender.com/grinders");
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
-  catch(err){
-    console.error(err)
-    throw err
-  }
-}
+};

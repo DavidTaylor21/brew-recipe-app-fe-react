@@ -4,7 +4,8 @@ import { addRecipe, getGrinders } from "../api/api";
 import { jwtDecode } from "jwt-decode";
 import Select from "react-select";
 
-const AddRecipeForm = ({ onAddRecipe }) => {
+const AddRecipeForm = ({ onAddRecipe, toggleForm }) => {
+  console.log("toggle form : ",toggleForm)
   const [grinders, setGrinders] = useState([]);
   const [error, setError] = useState(null);
   const [form, setForm] = useState({
@@ -36,9 +37,15 @@ const AddRecipeForm = ({ onAddRecipe }) => {
     e.preventDefault();
     const token = Cookies.get("jwt_token");
     const decodedToken = jwtDecode(token);
+    const recipeData = {
+      ...form,
+      grinder: form.grinder.value,
+      coffee: form.coffee,
+      username: decodedToken.username,
+    };
 
-    addRecipe(form, token);
-    onAddRecipe({ ...form, username: decodedToken.username });
+    addRecipe(recipeData, token);
+    onAddRecipe({ ...recipeData, username: decodedToken.username });
 
     setForm({
       title: "",
@@ -119,6 +126,7 @@ const AddRecipeForm = ({ onAddRecipe }) => {
             onChange={handleSelectChange}
             placeholder="Select a grinder..."
             className="mt-2"
+            required
           />
         </div>
         <button
@@ -128,6 +136,13 @@ const AddRecipeForm = ({ onAddRecipe }) => {
           Add Recipe
         </button>
       </form>
+        <button
+          type="button"
+          onClick={toggleForm}
+          className="mt-4 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-lg transition-all duration-300"
+        >
+          Cancel
+        </button>
     </div>
   );
 };
